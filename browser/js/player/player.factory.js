@@ -1,6 +1,6 @@
 'use strict';
 
-juke.factory('PlayerFactory', function($http, $log, StatsFactory){
+juke.factory('PlayerFactory', function($http, $log, $rootScope, StatsFactory){
   // non-UI logic in here
   var obj = {};
   var currentSong = null;
@@ -25,6 +25,10 @@ juke.factory('PlayerFactory', function($http, $log, StatsFactory){
     .catch($log.error);
   };
 
+  audio.ontimeupdate = function () {
+    $rootScope.$digest();
+    obj.progress = 100 * audio.currentTime / audio.duration;
+  };
 
       // StatsFactory.totalTime(album)
       // .then(function(albumDuration) {

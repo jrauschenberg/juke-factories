@@ -14,6 +14,11 @@ juke.controller('PlayerCtrl', function ($scope, PlayerFactory) {
   $scope.prev = function() {
     PlayerFactory.previous();
   };
+  $scope.progress = function() {
+    // $scope.$digest(); // no Angular-aware code is doing this for us here
+    return PlayerFactory.progress;
+  };
+  
 
   // initialize audio player (note this kind of DOM stuff is odd for Angular)
   // var audio = document.createElement('audio');
