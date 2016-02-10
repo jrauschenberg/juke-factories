@@ -19,7 +19,7 @@ juke.factory('PlayerFactory', function($http, $log, StatsFactory){
         song.audioUrl = '/api/songs/' + song._id + '.audio';
         song.albumIndex = i;
       });
-      masterAlbum = album;
+      masterAlbum = angular.copy(album);
       return album;
     })
     .catch($log.error);
@@ -33,7 +33,6 @@ juke.factory('PlayerFactory', function($http, $log, StatsFactory){
 
   obj.start = function (song){
     // stop existing audio (e.g. other song) in any case
-    console.log(song, playing, currentSong);
     var self = this;
     if (playing && song === currentSong) {
       self.pause();
@@ -42,11 +41,11 @@ juke.factory('PlayerFactory', function($http, $log, StatsFactory){
       // resume current song
       if (song === currentSong) audio.play();
       // enable loading new song
+      currentSong = song;
       audio.src = song.audioUrl;
       audio.load();
       audio.play();
       playing = true;
-      currentSong = song;
     }
   };
 
@@ -79,17 +78,14 @@ juke.factory('PlayerFactory', function($http, $log, StatsFactory){
 
   obj.progress = function() {
     return audio.currentTime / audio.duration;
-  }
+  };
 
   var skip = function(interval) {
     function mod (num, m) { return ((num % m) + m) % m; };
     if (!currentSong) return;
-    console.log(masterAlbum, currentSong);
     var index = currentSong.albumIndex;
     index = mod( (index + (interval || 1)), masterAlbum.songs.length );
-    currentSong = masterAlbum.songs[index];
-    if (playing) this.start(currentSong);
-    console.log(masterAlbum, currentSong);
+    if (playing) obj.start(masterAlbum.songs[index]);
   };
 
   return obj;
