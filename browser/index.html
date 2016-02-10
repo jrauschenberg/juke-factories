@@ -7,10 +7,12 @@
     <link href="/style.css" rel="stylesheet" />
     <script src="/angular/angular.js" defer></script>
     <script src="/js/module.js" defer></script>
-    <script src="/js/album/album.controllers.js" defer></script>
+    <script src="/js/album/albums.controller.js" defer></script>
+    <script src="/js/album/album.controller.js" defer></script>
     <script src="/js/player/player.controller.js" defer></script>
     <script src="/js/album/album.factory.js" defer></script>
     <script src="/js/player/player.factory.js" defer></script>
+
   </head>
   <body ng-app="juke">
     <div id="main" class="container-fluid">
@@ -27,7 +29,34 @@
       </div>
 
       <div class="col-xs-10">
-        <div class="album" ng-controller="AlbumCtrl">
+      <div ng-controller="AlbumsCtrl">
+        <h3>Albums</h3>
+        <div class="row">
+          <div class="col-xs-4">
+            <a class="thumbnail" href="#">
+              <img ng-src="http://placeholdit.imgix.net/~text?txtsize=33&txt=ALBUMoneIMAGE&w=300&h=300">
+              <div class="caption">
+                <h5>
+                  <span>ALBUM ONE NAME HERE</span>
+                </h5>
+                <small>NUMBER OF SONGS HERE songs</small>
+              </div>
+            </a>
+          </div>
+          <div class="col-xs-4">
+            <a class="thumbnail" href="#">
+              <img src="http://placeholdit.imgix.net/~text?txtsize=33&txt=ALBUMtwoIMAGE&w=300&h=300">
+              <div class="caption">
+                <h5>
+                  <span>ALBUM TWO NAME HERE</span>
+                </h5>
+                <small>NUMBER OF SONGS HERE songs</small>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+        <!-- <div ng-show="false" class="album" ng-controller="AlbumCtrl">
           <pre>{{currentSong() | json}}</pre>
           <p>
             <h3>{{ album.name }}{{ fullDuration }}</h3>
@@ -57,7 +86,7 @@
               </tr>
             </tbody>
           </table>
-        </div>
+        </div> -->
       </div>
 
       <footer>

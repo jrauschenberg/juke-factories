@@ -8,6 +8,7 @@ juke.factory('PlayerFactory', function($http, $log, $rootScope, StatsFactory){
   var audio = document.createElement('audio');
   var masterAlbum;
   var fullDuration;
+  var allAlbums=[];
 
   obj.load = function() {
     return $http.get('/api/albums/')
@@ -23,6 +24,29 @@ juke.factory('PlayerFactory', function($http, $log, $rootScope, StatsFactory){
       return album;
     })
     .catch($log.error);
+  };
+
+  obj.loadAll = function() {
+    return $http.get('/api/albums/')
+    .then(res => res.data)
+    .then(albums => {
+      albums.forEach(function(album){
+         $http.get('/api/albums/' + album._id)
+         .then(res => res.data)
+         .then(function(each){
+            each.imageUrl = '/api/albums/' + album._id + '.image';
+            each.songs.forEach(function (song, i) {
+              song.audioUrl = '/api/songs/' + song._id + '.audio';
+              song.albumIndex = i;
+           });
+            allAlbums.push(each);
+         });
+      });
+      allAlbums=angular.copy(albums);
+      return allAlbums;
+   })
+   .then(function(complete) { return complete; })
+   .catch($log.error);
   };
 
   audio.ontimeupdate = function () {
@@ -60,7 +84,7 @@ juke.factory('PlayerFactory', function($http, $log, $rootScope, StatsFactory){
 
   obj.resume = function () {
     this.start(currentSong);
-  }; 
+  };
 
   obj.isPlaying = function() {
     return playing;
@@ -70,14 +94,14 @@ juke.factory('PlayerFactory', function($http, $log, $rootScope, StatsFactory){
     return currentSong;
   };
 
-  obj.next = function () { 
-    skip(1); 
-    // $rootScope.$broadcast('next'); 
+  obj.next = function () {
+    skip(1);
+    // $rootScope.$broadcast('next');
   };
 
-  obj.previous = function () { 
-    skip(-1); 
-    // $rootScope.$broadcast('prev'); 
+  obj.previous = function () {
+    skip(-1);
+    // $rootScope.$broadcast('prev');
   };
 
   obj.progress = function() {
